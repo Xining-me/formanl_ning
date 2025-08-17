@@ -1,4 +1,0 @@
-#!/usr/bin/env sh
-# Minimal gradlew placeholder - CI systems will provide Gradle; this placeholder avoids errors.
-echo "Gradle wrapper placeholder"
-exit 0
