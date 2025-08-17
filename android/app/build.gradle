@@ -1,8 +1,18 @@
 plugins {
     id "com.android.application"
     id "org.jetbrains.kotlin.android"
-    id "dev.flutter.flutter-gradle-plugin"
 }
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader("UTF-8") { reader ->
+        localProperties.load(reader)
+    }
+}
+
+def flutterRoot = localProperties.getProperty("flutter.sdk")
+apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     namespace "com.example.campustweet"
@@ -19,7 +29,7 @@ android {
 
     buildTypes {
         release {
-            signingConfig signingConfigs.debug // 用 Codemagic 再换 keystore
+            signingConfig signingConfigs.debug
             minifyEnabled false
             shrinkResources false
         }
