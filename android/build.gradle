@@ -1,13 +1,24 @@
-// Root build.gradle
+// android/build.gradle
+buildscript {
+    ext.kotlin_version = '1.8.10'
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:7.4.2'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
 allprojects {
     repositories {
         google()
         mavenCentral()
-        maven { url 'https://storage.googleapis.com/flutter_infra_release/maven' }
     }
 }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
+rootProject.buildDir = '../build'
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
 }
-
