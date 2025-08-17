@@ -1,18 +1,19 @@
-// android/app/build.gradle
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android' // 如果项目使用 Kotlin（若未使用可移除此行）
-apply plugin: 'dev.flutter.flutter-gradle-plugin' // do NOT put version here
+plugins {
+    id "com.android.application"
+    id "org.jetbrains.kotlin.android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
 
 android {
-    compileSdkVersion 34
+    namespace "com.example.formanl_ning"   // ⚠️ 请改成您实际的包名
+    compileSdk = 34
 
     defaultConfig {
-        applicationId "com.example.formanl_ning" // 请根据实际 package 修改
-        minSdkVersion 21
-        targetSdkVersion 34
+        applicationId "com.example.formanl_ning"  // ⚠️ 同样改成您的包名
+        minSdk = 21
+        targetSdk = 34
         versionCode 1
         versionName "1.0"
-        // 如果使用 MultiDex 或其他配置在此添加
     }
 
     compileOptions {
@@ -21,24 +22,18 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = '17'
+        jvmTarget = "17"
     }
 
-    // signingConfigs / buildTypes / etc 可以沿用原仓库内容
     buildTypes {
         release {
-            // 请保留或设置 signingConfig（CI 上需要正确配置密钥）
+            signingConfig signingConfigs.debug
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            shrinkResources false
         }
     }
 }
 
 flutter {
-    source '..'
-}
-
-dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.8.22"
-    // 其他依赖保持原仓库中的配置
+    source '../..'
 }
