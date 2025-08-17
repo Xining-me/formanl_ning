@@ -1,20 +1,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-
     <application
-        android:name="${applicationName}"
-        android:label="CampusTweet"
-        android:icon="@mipmap/ic_launcher"
-        android:usesCleartextTraffic="true">
+        android:name="io.flutter.app.FlutterApplication"
+        android:label="formanl_ning"
+        android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:launchMode="singleTop"
             android:theme="@style/LaunchTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <meta-data android:name="flutterEmbedding" android:value="2" />
     </application>
 </manifest>
