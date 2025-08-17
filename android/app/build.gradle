@@ -5,8 +5,10 @@ plugins {
 }
 
 android {
-    namespace "com.example.formanl_ning"   // ⚠️ 请改成您实际的包名
+    namespace "com.example.campustweet"  // 这里定义应用 namespace
     compileSdk = 34
+    ...
+}
 
     defaultConfig {
         applicationId "com.example.formanl_ning"  // ⚠️ 同样改成您的包名
