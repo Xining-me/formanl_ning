@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace "com.example.formanl_ning"   // ✅ 确保和 applicationId 一致
+    namespace "com.example.formanl_ning"
     compileSdk = 34
 
     defaultConfig {
-        applicationId "com.example.formanl_ning"  // ✅ 改成您的包名
+        applicationId "com.example.formanl_ning"
         minSdk = 21
         targetSdk = 34
         versionCode 1
