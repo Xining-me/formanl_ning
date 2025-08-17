@@ -3,27 +3,13 @@ pluginManagement {
         google()
         mavenCentral()
         gradlePluginPortal()
-        // 添加 Flutter 官方插件仓库
-        maven { 
-            url "https://storage.googleapis.com/flutter-infra/releases/maven" 
-        }
+        maven { url "https://storage.googleapis.com/flutter_infra_release/maven" }
     }
     plugins {
-        // 明确指定 Flutter Gradle 插件版本（与 Flutter 版本匹配）
-        id "dev.flutter.flutter-gradle-plugin" version "1.0.0" apply false
-    }
-}
-
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
-    repositories {
-        google()
-        mavenCentral()
-        maven { 
-            url "https://storage.googleapis.com/flutter-infra/releases/maven" 
-        }
+        id("dev.flutter.flutter-plugin-loader") version "1.0.0"
     }
 }
 
 rootProject.name = "campustweet"
 include ":app"
+
