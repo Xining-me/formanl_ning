@@ -1,10 +1,28 @@
-plugins {
-    id 'com.android.application' version '8.1.0' apply false
-    id 'org.jetbrains.kotlin.android' version '1.8.22' apply false
-    id 'dev.flutter.flutter-gradle-plugin' version '1.0.0' apply false
+// Root build.gradle - do NOT declare dev.flutter.flutter-gradle-plugin with version here
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        // Flutter's maven for engine artifacts and plugin metadata
+        maven { url 'https://storage.googleapis.com/flutter_infra_release/maven' }
+    }
+    dependencies {
+        // AGP version: choose a stable version compatible with your Flutter/gradle.
+        // If your CI provides a particular AGP or Flutter expects another, adjust as needed.
+        classpath 'com.android.tools.build:gradle:8.1.0'
+        // If you use Kotlin in Android side:
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.22"
+    }
 }
 
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        maven { url 'https://storage.googleapis.com/flutter_infra_release/maven' }
+    }
+}
 
-tasks.register("clean", Delete::class) {
-    delete(rootProject.buildDir)
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }
