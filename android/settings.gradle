@@ -3,19 +3,25 @@ pluginManagement {
         google()
         mavenCentral()
         gradlePluginPortal()
-        maven { url "https://storage.googleapis.com/flutter-infra/releases/maven" }
+        // 添加 Flutter 官方插件仓库
+        maven { 
+            url "https://storage.googleapis.com/flutter-infra/releases/maven" 
+        }
     }
     plugins {
+        // 明确指定 Flutter Gradle 插件版本（与 Flutter 版本匹配）
         id "dev.flutter.flutter-gradle-plugin" version "1.0.0" apply false
     }
 }
 
 dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS) // 关键：禁止项目级仓库配置
+    repositoriesMode.set(RepositoriesMode.PREFER_SETTINGS)
     repositories {
         google()
         mavenCentral()
-        maven { url "https://storage.googleapis.com/flutter-infra/releases/maven" }
+        maven { 
+            url "https://storage.googleapis.com/flutter-infra/releases/maven" 
+        }
     }
 }
 
