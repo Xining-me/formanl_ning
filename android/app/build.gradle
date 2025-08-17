@@ -1,29 +1,44 @@
-plugins {
-    id 'com.android.application'
-    id 'dev.flutter.flutter-gradle-plugin'
-}
-
+// android/app/build.gradle
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android' // 如果项目使用 Kotlin（若未使用可移除此行）
+apply plugin: 'dev.flutter.flutter-gradle-plugin' // do NOT put version here
 
 android {
-    namespace "com.example.campustweet"
-    compileSdk 34
+    compileSdkVersion 34
 
     defaultConfig {
-        applicationId "com.example.campustweet"
-        minSdk 21
-        targetSdk 34
+        applicationId "com.example.formanl_ning" // 请根据实际 package 修改
+        minSdkVersion 21
+        targetSdkVersion 34
         versionCode 1
         versionName "1.0"
+        // 如果使用 MultiDex 或其他配置在此添加
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+
+    // signingConfigs / buildTypes / etc 可以沿用原仓库内容
     buildTypes {
         release {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            // 请保留或设置 signingConfig（CI 上需要正确配置密钥）
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 }
 
+flutter {
+    source '..'
+}
+
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.24"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.8.22"
+    // 其他依赖保持原仓库中的配置
 }
