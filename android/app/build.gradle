@@ -1,0 +1,80 @@
+// android/app/build.gradle (REPLACE existing file with this content)
+
+import java.util.Properties
+
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader ->
+        localProperties.load(reader)
+    }
+}
+
+// Try local.properties first, then environment variable FLUTTER_ROOT
+def flutterRoot = localProperties.getProperty('flutter.sdk') ?: System.getenv('FLUTTER_ROOT')
+if (flutterRoot == null || flutterRoot.trim().isEmpty()) {
+    throw new GradleException("Flutter SDK not found. Define 'flutter.sdk' in local.properties or set the FLUTTER_ROOT environment variable.")
+}
+
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+
+// Import Flutter's gradle helpers
+apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+
+android {
+    compileSdkVersion 34
+    namespace "com.example.campustweet"
+
+    // If flutter.gradle provides flutterVersionCode/flutterVersionName they will be used,
+    // otherwise fallback to defaults.
+    def flutterVersionCode = project.hasProperty('flutterVersionCode') ? flutterVersionCode : 1
+    def flutterVersionName = project.hasProperty('flutterVersionName') ? flutterVersionName : "1.0.0"
+
+    defaultConfig {
+        applicationId "com.example.campustweet"
+        minSdkVersion 21
+        targetSdkVersion 34
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+        multiDexEnabled true
+    }
+
+    signingConfigs {
+        release {
+            // If using Codemagic keystore, inject keys via environment variables:
+            if (project.hasProperty('KEYSTORE_PATH')) {
+                storeFile file(KEYSTORE_PATH)
+                storePassword KEYSTORE_PASSWORD
+                keyAlias KEY_ALIAS
+                keyPassword KEY_PASSWORD
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            signingConfig signingConfigs.release
+            minifyEnabled false
+            shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+}
+
+flutter {
+    source '../..'
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.8.22"
+    implementation 'androidx.multidex:multidex:2.0.1'
+}
