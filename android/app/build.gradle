@@ -1,41 +1,26 @@
-// android/app/build.gradle — use declarative Flutter Gradle plugin
-plugins {
-    id "com.android.application"
-    id "org.jetbrains.kotlin.android"
-    id "dev.flutter.flutter-gradle-plugin"
-}
-
-android {
-    namespace "com.example.campustweet"
-    compileSdk = 34
-
-    defaultConfig {
-        applicationId "com.example.campustweet"
-        minSdk = 21
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0.0"
-        multiDexEnabled = true
-    }
-
-    buildTypes {
-        release {
-            // TODO: replace with real signingConfig via Codemagic env vars
-            signingConfig = signingConfigs.debug
-            minifyEnabled = false
-            shrinkResources = false
+buildscript {
+    ext.kotlin_version = '1.9.0'
+    repositories {
+        google()
+        mavenCentral()
+        // 确保构建脚本能访问 Flutter 插件仓库
+        maven { 
+            url "https://storage.googleapis.com/flutter-infra/releases/maven" 
         }
     }
 
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlinOptions {
-        jvmTarget = "17"
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.1.0'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        // 显式添加 Flutter Gradle 插件依赖
+        classpath "dev.flutter:flutter-gradle-plugin:1.0.0"
     }
 }
 
-dependencies {
-    implementation "androidx.multidex:multidex:2.0.1"
+rootProject.buildDir = "../build"
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
 }
