@@ -1,23 +1,53 @@
-pluginManagement {
-    repositories {
-        google()
-        mavenCentral()
-        gradlePluginPortal()
-        maven { url "https://storage.googleapis.com/flutter-infra/releases/maven" }
-    }
-    plugins {
-        id "dev.flutter.flutter-gradle-plugin" version "1.0.0" apply false
-    }
-}
 
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral()
-        maven { url "https://storage.googleapis.com/flutter-infra/releases/maven" }
-    }
-}
+Upgrading build.gradle
+Running Gradle task 'assembleRelease'...                        
+Using system gradle at /usr/local/bin/gradle
+Upgrading build.gradle
+Running Gradle task 'assembleRelease'...                        
+Using system gradle at /usr/local/bin/gradle
 
-rootProject.name = "campustweet"
-include ":app"
+FAILURE: Build failed with an exception.
+
+* Where:
+Build file '/Users/builder/clone/android/build.gradle' line: 16
+
+* What went wrong:
+A problem occurred evaluating root project 'campustweet'.
+> Build was configured to prefer settings repositories over project repositories but repository 'Google' was added by build file 'build.gradle'
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 57s
+Running Gradle task 'assembleRelease'...                           57.9s
+Gradle task assembleRelease failed with exit code 1
+
+
+Build failed :|
+Step 6 script `Build APK (release)` exited with status code 1
+
+FAILURE: Build failed with an exception.
+
+* Where:
+Build file '/Users/builder/clone/android/build.gradle' line: 16
+
+* What went wrong:
+A problem occurred evaluating root project 'campustweet'.
+> Build was configured to prefer settings repositories over project repositories but repository 'Google' was added by build file 'build.gradle'
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --info or --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+BUILD FAILED in 57s
+Running Gradle task 'assembleRelease'...                           57.9s
+Gradle task assembleRelease failed with exit code 1
+
+
+Build failed :|
+Step 6 script `Build APK (release)` exited with status code 1
