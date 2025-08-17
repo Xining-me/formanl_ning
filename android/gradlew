@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+# A resilient gradlew replacement for CI: if 'gradle' is available, use it;
+# otherwise download a specified Gradle distribution, extract it, and run it.
+# This avoids relying on the repository containing a pre-bundled gradle wrapper.
+set -euo pipefail
+
+GRADLE_VERSION="8.1"
+GRADLE_DIST="gradle-${GRADLE_VERSION}-bin.zip"
+GRADLE_URL="https://services.gradle.org/distributions/${GRADLE_DIST}"
+INSTALL_DIR="${HOME}/.gradle-wrapper/${GRADLE_VERSION}"
+
+run_gradle() {
+  if command -v gradle >/dev/null 2>&1; then
+    echo "Using system gradle at $(command -v gradle)"
+    exec gradle "$@"
+  fi
+
+  # If gradle not present, try to use previously downloaded distribution
+  if [ -x "${INSTALL_DIR}/bin/gradle" ]; then
+    echo "Using cached gradle at ${INSTALL_DIR}"
+    PATH="${INSTALL_DIR}/bin:${PATH}"
+    exec gradle "$@"
+  fi
+
+  echo "Gradle not found. Downloading Gradle ${GRADLE_VERSION} ..."
+  mkdir -p "${INSTALL_DIR}.tmp"
+  cd "${INSTALL_DIR}.tmp"
+
+  # download with curl or wget
+  if command -v curl >/dev/null 2>&1; then
+    curl -sSL -o "${GRADLE_DIST}" "${GRADLE_URL}"
+  elif command -v wget >/dev/null 2>&1; then
+    wget -q -O "${GRADLE_DIST}" "${GRADLE_URL}"
+  else
+    echo "Error: neither curl nor wget is available to download Gradle." >&2
+    exit 2
+  fi
+
+  # extract
+  if command -v unzip >/dev/null 2>&1; then
+    unzip -q "${GRADLE_DIST}" -d .
+  else
+    # try python fallback
+    if command -v python3 >/dev/null 2>&1; then
+      python3 - <<PY
+import zipfile,sys
+zf = zipfile.ZipFile("${GRADLE_DIST}")
+zf.extractall(".")
+print("extracted")
+PY
+    else
+      echo "Error: 'unzip' not available and no python3 fallback." >&2
+      exit 2
+    fi
+  fi
+
+  # move into install dir
+  mv "gradle-${GRADLE_VERSION}" "${INSTALL_DIR}"
+  rm -rf "${INSTALL_DIR}.tmp"
+  PATH="${INSTALL_DIR}/bin:${PATH}"
+  echo "Gradle ${GRADLE_VERSION} installed to ${INSTALL_DIR}"
+  exec gradle "$@"
+}
+
+# Execute
+run_gradle "$@"
