@@ -1,15 +1,18 @@
-// android/app/build.gradle (替换此文件)
+// android/app/build.gradle — 替换此文件内容
+import java.util.Properties
+
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
     localPropertiesFile.withReader('UTF-8') { reader -> localProperties.load(reader) }
 }
 
-// 优先从 local.properties 读取 flutter.sdk，若无则从环境变量读取
 def flutterRoot = localProperties.getProperty('flutter.sdk') ?: System.getenv('FLUTTER_ROOT')
 if (flutterRoot == null) {
-    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file or set FLUTTER_ROOT environment variable.")
+    throw new GradleException("Flutter SDK not found. Set flutter.sdk in local.properties or set FLUTTER_ROOT env.")
 }
+
+def kotlin_version = '1.8.10' // 若在根 build.gradle 中已有定义，可与其保持一致
 
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
@@ -18,28 +21,29 @@ android {
     compileSdkVersion 33
 
     defaultConfig {
-        // 请根据实际 applicationId 修改
-        applicationId "com.example.campustweet"
-        // 不要使用 flutter.xxx 形式的未定义对象，使用明确数值
+        applicationId "com.example.campustweet" // 请改为你的 package
+        // 明确使用数字，不引用未定义的 flutter.xxx
         minSdkVersion 21
         targetSdkVersion 33
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
+        versionCode 1
+        versionName "1.0"
         multiDexEnabled true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
-        debug {}
+        debug { }
     }
 
     buildTypes {
         release {
-            // 若你有 release keystore，请在 signingConfigs 中配置并替换下面行
             signingConfig signingConfigs.debug
             minifyEnabled false
             shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            signingConfig signingConfigs.debug
         }
     }
 
@@ -53,9 +57,9 @@ android {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${kotlin_version}"
     implementation 'androidx.multidex:multidex:2.0.1'
 }
 
-// 必须应用 flutter.gradle（它会定义 flutterVersionCode / flutterVersionName 等）
+// 保留 flutter.gradle，以便 Flutter 打包任务正常工作
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
