@@ -1,45 +1,29 @@
 plugins {
-    id "com.android.application"
-    id "org.jetbrains.kotlin.android"
-    id "dev.flutter.flutter-gradle-plugin"
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    id("dev.flutter.flutter-gradle-plugin")
 }
 
 android {
     namespace "com.example.campustweet"
-    compileSdk = 34
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.example.campustweet"
-        minSdk = 21
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0.0"
-        multiDexEnabled = true
+        minSdk 21
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
     }
 
     buildTypes {
         release {
-            // 注意：发布时需配置正式签名信息，此处临时使用debug签名
-            signingConfig = signingConfigs.debug
-            minifyEnabled = false
-            shrinkResources = false
+            isMinifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-    kotlinOptions {
-        jvmTarget = "17"
     }
 }
 
 dependencies {
-    implementation "androidx.multidex:multidex:2.0.1"
-}
-
-// 应用 Flutter 插件配置（关键）
-flutter {
-    source '../..'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:1.9.24"
 }
