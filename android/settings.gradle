@@ -1,0 +1,31 @@
+// android/settings.gradle — Flutter 3.16+ compatible
+pluginManagement {
+    def flutterSdkPath = System.getenv("FLUTTER_ROOT") ?: System.getenv("FLUTTER_SDK")
+    if (flutterSdkPath == null) {
+        def props = new Properties()
+        def propsFile = new File(rootDir, "local.properties")
+        if (propsFile.exists()) {
+            propsFile.withReader("UTF-8") { reader -> props.load(reader) }
+            flutterSdkPath = props.getProperty("flutter.sdk")
+        }
+    }
+    if (flutterSdkPath == null || flutterSdkPath.trim().isEmpty()) {
+        throw new GradleException("Flutter SDK not found. Set FLUTTER_ROOT or define flutter.sdk in local.properties")
+    }
+
+    includeBuild("${flutterSdkPath}/packages/flutter_tools/gradle")
+
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+plugins {
+    id "dev.flutter.flutter-plugin-loader" version "1.0.0" apply false
+    id "com.android.application" version "8.1.0" apply false
+    id "org.jetbrains.kotlin.android" version "1.8.22" apply false
+}
+
+include(":app")
