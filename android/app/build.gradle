@@ -1,39 +1,67 @@
-plugins {
-    id "com.android.application"
-    id "org.jetbrains.kotlin.android"
-    id "dev.flutter.flutter-gradle-plugin"
+// android/app/build.gradle
+def localProperties = new Properties()
+def localPropertiesFile = rootProject.file('local.properties')
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.withReader('UTF-8') { reader -> localProperties.load(reader) }
 }
 
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+
 android {
-    namespace "com.example.formanl_ning"
-    compileSdk = 34
+    compileSdkVersion 33
 
     defaultConfig {
-        applicationId "com.example.formanl_ning"
-        minSdk = 21
-        targetSdk = 34
+        applicationId "com.example.campustweet" // 按你项目修改包名
+        minSdkVersion 21
+        targetSdkVersion 33
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
     }
 
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = "17"
+    signingConfigs {
+        release {
+            // 使用 Codemagic 环境变量注入 keystore 文件路径/密码等
+            def storeFileEnv = System.getenv('KEYSTORE_FILE_PATH')
+            if (storeFileEnv != null && storeFileEnv?.trim().length() > 0) {
+                storeFile file(storeFileEnv)
+            }
+            storePassword System.getenv('KEYSTORE_PASSWORD') ?: ''
+            keyAlias System.getenv('KEY_ALIAS') ?: ''
+            keyPassword System.getenv('KEY_PASSWORD') ?: ''
+        }
     }
 
     buildTypes {
         release {
-            signingConfig signingConfigs.debug
+            // 如果你未在 Codemagic 配置签名，临时使用 debug 签名以通过构建（仅测试）
+            if (System.getenv('KEYSTORE_FILE_PATH') == null) {
+                signingConfig signingConfigs.debug
+            } else {
+                signingConfig signingConfigs.release
+            }
             minifyEnabled false
             shrinkResources false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            signingConfig signingConfigs.debug
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    kotlinOptions {
+        jvmTarget = '11'
     }
 }
 
-flutter {
-    source '../..'
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation platform('com.google.firebase:firebase-bom:32.0.0') // 如用 firebase 可保留，否则删除
 }
