@@ -1,14 +1,19 @@
-// 仅保留构建脚本配置，删除项目级仓库（避免与 settings.gradle 冲突）
 buildscript {
     ext.kotlin_version = '1.9.0'
     repositories {
         google()
         mavenCentral()
+        // 确保构建脚本能访问 Flutter 插件仓库
+        maven { 
+            url "https://storage.googleapis.com/flutter-infra/releases/maven" 
+        }
     }
 
     dependencies {
         classpath 'com.android.tools.build:gradle:8.1.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        // 显式添加 Flutter Gradle 插件依赖
+        classpath "dev.flutter:flutter-gradle-plugin:1.0.0"
     }
 }
 
