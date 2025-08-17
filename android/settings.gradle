@@ -1,25 +1,37 @@
+// settings.gradle - for Flutter projects (compatible with includeBuild)
 pluginManagement {
-    def flutterSdkPath = {
-        def properties = new Properties()
-        file("local.properties").withInputStream { properties.load(it) }
-        def flutterSdkPath = properties.getProperty("flutter.sdk")
-        assert flutterSdkPath != null, "flutter.sdk not set in local.properties"
-        return flutterSdkPath
-    }()
-
-    includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
-
     repositories {
+        gradlePluginPortal()
         google()
         mavenCentral()
-        gradlePluginPortal()
+        maven { url 'https://storage.googleapis.com/flutter_infra_release/maven' }
     }
 }
 
-plugins {
-    id "dev.flutter.flutter-plugin-loader" version "1.0.0"
-    id "com.android.application" version "8.1.0" apply false
-    id "org.jetbrains.kotlin.android" version "1.8.22" apply false
+def flutterRoot = null
+// try to read flutter.sdk from local.properties if present
+def propsFile = new File(rootDir, "local.properties")
+if (propsFile.exists()) {
+    Properties props = new Properties()
+    propsFile.withInputStream { stream -> props.load(stream) }
+    if (props.getProperty("flutter.sdk") != null) {
+        flutterRoot = props.getProperty("flutter.sdk")
+    }
+}
+// fallback: try relative path (common for CI that checks out repo near flutter)
+if (flutterRoot == null) {
+    // If Codemagic / CI provides FLUTTER_ROOT env, use it:
+    if (System.getenv("FLUTTER_ROOT") != null) {
+        flutterRoot = System.getenv("FLUTTER_ROOT")
+    } else {
+        // leave null — includeBuild will only be attempted if flutterRoot resolved
+        flutterRoot = null
+    }
 }
 
+if (flutterRoot != null) {
+    includeBuild("$flutterRoot/packages/flutter_tools/gradle")
+}
+
+rootProject.name = "formanl_ning"
 include ":app"
